@@ -1,8 +1,5 @@
 #include "register-opcode-handler.h"
 
-#include <stdexcept>
-#include <sstream>
-
 const uint8_t RegisterOpcodeHandler::TAX;
 const uint8_t RegisterOpcodeHandler::TXA;
 const uint8_t RegisterOpcodeHandler::DEX;
@@ -23,31 +20,37 @@ void RegisterOpcodeHandler::execute() {
         case TAX:
             x_index->set_value(accumulator->get_value());
             break;
+
         case TXA:
             accumulator->set_value(x_index->get_value());
             break;
+
         case DEX:
             x_index->set_value(x_index->get_value() - 1);
             break;
+
         case INX:
             x_index->set_value(x_index->get_value() + 1);
             break;
+
         case TAY:
             y_index->set_value(accumulator->get_value());
             break;
+
         case TYA:
             accumulator->set_value(y_index->get_value());
             break;
+
         case DEY:
             y_index->set_value(y_index->get_value() - 1);
             break;
+
         case INY:
             y_index->set_value(y_index->get_value() + 1);
             break;
+
         default:
-            stringstream stream;
-            stream << "Unexpected opcode 0x" << hex << opcode;
-            throw runtime_error(stream.str());
+            throw_unexpected_opcode(opcode);
     }
 
     move_program_counter(1);

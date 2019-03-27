@@ -13,9 +13,10 @@ class OpcodeHandler {
 public:
     OpcodeHandler(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man, shared_ptr<Memory> memory);
 
-    shared_ptr<vector<uint8_t>> get_handled_opcodes() { return handled_opcodes; }
-
     virtual void execute() = 0;
+
+    shared_ptr<vector<uint8_t>> get_handled_opcodes() { return handled_opcodes; }
+    void throw_unexpected_opcode(uint8_t opcode);
 
 protected:
     shared_ptr<vector<uint8_t>> handled_opcodes = make_shared<vector<uint8_t>>();

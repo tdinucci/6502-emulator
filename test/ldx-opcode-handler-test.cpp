@@ -48,7 +48,7 @@ TEST(LdxOpcodeHandler, ZeroPage) {
 }
 
 TEST(LdxOpcodeHandler, ZeroPageY) {
-    auto code = make_shared<vector<uint8_t>>(vector<uint8_t>{ZERO_PAGE_Y, 250});
+    auto code = make_shared<vector<uint8_t>>(vector<uint8_t>{ZERO_PAGE_Y, 0x50});
     auto machine = ldxt_get_machine(code);
     auto reg_man = machine->get_reg_man();
     auto x_reg = reg_man->get_x_index();
@@ -56,16 +56,16 @@ TEST(LdxOpcodeHandler, ZeroPageY) {
 
     ASSERT_EQ(0, x_reg->get_value());
     ASSERT_EQ(0, y_reg->get_value());
-    machine->get_memory()->set_byte_at(250, 255);
+    machine->get_memory()->set_byte_at(0x50, 255);
     machine->execute();
     ASSERT_EQ(255, x_reg->get_value());
 
-    reg_man->get_y_index()->set_value(100);
+    reg_man->get_y_index()->set_value(0x17);
     reg_man->get_program_counter()->set_value(0);
     machine->execute();
     ASSERT_EQ(0, x_reg->get_value());
 
-    machine->get_memory()->set_byte_at(350, 233);
+    machine->get_memory()->set_byte_at(0x67, 233);
     reg_man->get_program_counter()->set_value(0);
     machine->execute();
     ASSERT_EQ(233, x_reg->get_value());

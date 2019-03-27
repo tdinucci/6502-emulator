@@ -1,8 +1,5 @@
 #include "flag-opcode-handler.h"
 
-#include <stdexcept>
-#include <sstream>
-
 const uint8_t FlagOpcodeHandler::CLC;
 const uint8_t FlagOpcodeHandler::SEC;
 const uint8_t FlagOpcodeHandler::CLI;
@@ -39,9 +36,7 @@ void FlagOpcodeHandler::execute() {
             statusReg->set_decimal(true);
             break;
         default:
-            stringstream stream;
-            stream << "Unexpected opcode 0x" << hex << opcode;
-            throw runtime_error(stream.str());
+            throw_unexpected_opcode(opcode);
     }
 
     move_program_counter(1);

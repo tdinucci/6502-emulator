@@ -1,5 +1,4 @@
 #include "ldx-opcode-handler.h"
-#include <sstream>
 
 const uint8_t LdxOpcodeHandler::IMMEDIATE;
 const uint8_t LdxOpcodeHandler::ZERO_PAGE;
@@ -25,7 +24,8 @@ void LdxOpcodeHandler::execute() {
             break;
 
         case ZERO_PAGE_Y: {
-            uint16_t address = byte2 + reg_man->get_y_index()->get_value();
+            // expect wrap around
+            uint8_t address = byte2 + reg_man->get_y_index()->get_value();
 
             x_reg->set_value(memory->get_byte_at(address));
             move_program_counter(2);
@@ -53,8 +53,6 @@ void LdxOpcodeHandler::execute() {
         }
 
         default:
-            stringstream stream;
-            stream << "Unexpected opcode 0x" << hex << opcode;
-            throw runtime_error(stream.str());
+            throw_unexpected_opcode(opcode);
     }
 }

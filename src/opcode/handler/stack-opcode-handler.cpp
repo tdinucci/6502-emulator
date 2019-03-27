@@ -1,6 +1,4 @@
 #include "stack-opcode-handler.h"
-#include <sstream>
-#include <climits>
 
 const uint8_t StackOpcodeHandler::PHA;
 const uint8_t StackOpcodeHandler::PLA;
@@ -34,9 +32,7 @@ void StackOpcodeHandler::execute() {
         }
 
         default:
-            stringstream stream;
-            stream << "Unexpected opcode 0x" << hex << opcode;
-            throw runtime_error(stream.str());
+            throw_unexpected_opcode(opcode);
     }
 
     move_program_counter(1);
