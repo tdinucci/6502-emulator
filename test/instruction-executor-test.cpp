@@ -22,7 +22,8 @@ TEST(InstructionExecutor, Execute) {
              CLC
             });
     auto program = make_shared<Program>(Program(code));
-    auto opcode_handler_dir = make_shared<OpcodeHandlerDirectory>(OpcodeHandlerDirectory(program, reg_man));
+    auto memory = make_shared<Memory>(Memory());
+    auto opcode_handler_dir = make_shared<OpcodeHandlerDirectory>(OpcodeHandlerDirectory(program, reg_man, memory));
     auto executor = make_unique<InstructionExecutor>(InstructionExecutor(program, reg_man, opcode_handler_dir));
 
     executor->execute();

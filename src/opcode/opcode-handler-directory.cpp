@@ -2,16 +2,18 @@
 #include "handler/flag-opcode-handler.h"
 #include "handler/register-opcode-handler.h"
 #include "handler/ldx-opcode-handler.h"
+#include "handler/stack-opcode-handler.h"
 
 #include <sstream>
 #include <stdexcept>
 
-OpcodeHandlerDirectory::OpcodeHandlerDirectory(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man) {
+OpcodeHandlerDirectory::OpcodeHandlerDirectory(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man, shared_ptr<Memory> memory) {
     handlers = make_unique<unordered_map<uint8_t, shared_ptr<OpcodeHandler>>>();
 
-    register_handler(make_shared<FlagOpcodeHandler>(program, reg_man));
-    register_handler(make_shared<RegisterOpcodeHandler>(program, reg_man));
-    register_handler(make_shared<LdxOpcodeHandler>(program, reg_man));
+    register_handler(make_shared<FlagOpcodeHandler>(FlagOpcodeHandler(program, reg_man, memory)));
+    register_handler(make_shared<RegisterOpcodeHandler>(RegisterOpcodeHandler(program, reg_man, memory)));
+    register_handler(make_shared<LdxOpcodeHandler>(LdxOpcodeHandler(program, reg_man, memory)));
+    register_handler(make_shared<StackOpcodeHandler>(StackOpcodeHandler(program, reg_man, memory)));
 }
 
 void OpcodeHandlerDirectory::register_handler(shared_ptr<OpcodeHandler> handler) {

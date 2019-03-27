@@ -2,6 +2,7 @@
 #define INC_6502_EMULATOR_OPCODE_HANDLER_DIRECTORY_H
 
 #include "../program.h"
+#include "../memory.h"
 #include "opcode-handler.h"
 #include <unordered_map>
 #include <vector>
@@ -11,7 +12,7 @@ using namespace std;
 
 class OpcodeHandlerDirectory {
 public:
-    explicit OpcodeHandlerDirectory(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man);
+    explicit OpcodeHandlerDirectory(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man, shared_ptr<Memory> memory);
 
     shared_ptr<OpcodeHandler> get_handler(uint8_t opcode);
 private:

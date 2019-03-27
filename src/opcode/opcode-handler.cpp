@@ -1,9 +1,10 @@
-#include "../program.h"
 #include "opcode-handler.h"
 
-OpcodeHandler::OpcodeHandler(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man) {
+OpcodeHandler::OpcodeHandler(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man,
+                             shared_ptr<Memory> memory) {
     this->program = program;
     this->reg_man = reg_man;
+    this->memory = memory;
 }
 
 void OpcodeHandler::move_program_counter(uint8_t forward_by) {

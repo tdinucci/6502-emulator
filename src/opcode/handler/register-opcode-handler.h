@@ -15,8 +15,9 @@ public:
     static const uint8_t DEY = 0x88;
     static const uint8_t INY = 0xC8;
 
-    explicit RegisterOpcodeHandler(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man) :
-            OpcodeHandler(program, reg_man) {
+    explicit RegisterOpcodeHandler(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man,
+                                   shared_ptr<Memory> memory) :
+            OpcodeHandler(program, reg_man, memory) {
         handled_opcodes->push_back(TAX);
         handled_opcodes->push_back(TXA);
         handled_opcodes->push_back(DEX);

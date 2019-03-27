@@ -1,7 +1,6 @@
 #ifndef INC_6502_EMULATOR_FLAG_OPCODE_HANDLER_H
 #define INC_6502_EMULATOR_FLAG_OPCODE_HANDLER_H
 
-#include "../../program.h"
 #include "../opcode-handler.h"
 
 class FlagOpcodeHandler : public OpcodeHandler {
@@ -14,8 +13,9 @@ public:
     static const uint8_t CLD = 0xD8;
     static const uint8_t SED = 0xF8;
 
-    explicit FlagOpcodeHandler(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man) :
-            OpcodeHandler(program, reg_man) {
+    explicit FlagOpcodeHandler(shared_ptr<Program> program, shared_ptr<RegisterManager> reg_man,
+                               shared_ptr<Memory> memory) :
+            OpcodeHandler(program, reg_man, memory) {
         handled_opcodes->push_back(CLC);
         handled_opcodes->push_back(SEC);
         handled_opcodes->push_back(CLI);
