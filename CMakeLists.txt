@@ -25,7 +25,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 
 file(GLOB_RECURSE test_src "test/**.h" "test/**.cpp" "src/**.h" "src/**.cpp")
 list(FILTER test_src EXCLUDE REGEX ".*/6502-emulator/src/main.cpp$")
-add_executable(6502_emulator_test ${test_src} test/machine-test.cpp test/flags-opcode-handler-test.cpp)
+add_executable(6502_emulator_test ${test_src})
 target_link_libraries(6502_emulator_test gtest_main)
 add_test(NAME run_tests COMMAND 6502_emulator_test)
 
