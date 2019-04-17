@@ -15,6 +15,7 @@ namespace emu_6502 {
     public:
         OpcodeHandlerContainer();
         OpcodeHandlerContainer(const OpcodeHandlerContainer& other) = delete;
+        OpcodeHandlerContainer operator=(const OpcodeHandlerContainer& other) = delete;
 
         virtual ~OpcodeHandlerContainer() {};
 

@@ -13,12 +13,12 @@ namespace emu_6502 {
     }
 
     template<typename T>
-    const T Register<T>::get_value() {
+    T Register<T>::get_value() const {
         return value;
     }
 
     template<typename T>
-    const string& Register<T>::get_name() {
+    const string& Register<T>::get_name() const {
         return name;
     }
 }

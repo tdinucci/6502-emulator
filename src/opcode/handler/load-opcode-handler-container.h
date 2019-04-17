@@ -51,7 +51,8 @@ namespace emu_6502 {
 
     public:
         LoadOpcodeHandlerContainer();
-        LoadOpcodeHandlerContainer(const LoadOpcodeHandlerContainer& other) = delete;
+        LoadOpcodeHandlerContainer(const LoadOpcodeHandlerContainer&) = delete;
+        LoadOpcodeHandlerContainer& operator=(const LoadOpcodeHandlerContainer&) = delete;
     };
 }
 

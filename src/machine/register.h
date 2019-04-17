@@ -20,9 +20,9 @@ namespace emu_6502 {
         Register<T>(const Register<T>&) = delete;
         Register<T>& operator=(const Register<T>&) = delete;
 
-        const string& get_name();
+        const string& get_name() const;
 
-        const T get_value();
+        T get_value() const;
         void set_value(T value);
     };
 }

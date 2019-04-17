@@ -45,6 +45,7 @@ namespace emu_6502 {
     public:
         StoreOpcodeHandlerContainer();
         StoreOpcodeHandlerContainer(const StoreOpcodeHandlerContainer& other) = delete;
+        StoreOpcodeHandlerContainer operator=(const StoreOpcodeHandlerContainer& other) = delete;
     };
 }
 

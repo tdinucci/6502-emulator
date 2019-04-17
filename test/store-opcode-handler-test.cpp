@@ -1,9 +1,6 @@
 #include "gtest/gtest.h"
 #include "test-utils.h"
 
-#include <memory>
-#include <vector>
-
 using namespace std;
 using namespace emu_6502;
 
