@@ -16,9 +16,9 @@ namespace emu_6502 {
         T value;
 
     public:
-        Register<T>(string name);
+        explicit Register<T>(string name);
         Register<T>(const Register<T>&) = delete;
-        Register<T>& operator=(const Register<T>&) = delete;
+        virtual Register<T>& operator=(const Register<T>&) = delete;
 
         const string& get_name() const;
 

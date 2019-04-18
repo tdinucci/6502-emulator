@@ -15,6 +15,8 @@ namespace emu_6502 {
     uint16_t get_abs_address(uint8_t low_byte, uint8_t high_byte);
     uint16_t get_abs_x_address(uint8_t low_byte, uint8_t high_byte, Cpu& cpu);
     uint16_t get_abs_y_address(uint8_t low_byte, uint8_t high_byte, Cpu& cpu);
+    uint16_t get_abs_x_address(Machine& machine, Cpu& cpu);
+    uint16_t get_abs_y_address(Machine& machine, Cpu& cpu);
     uint16_t get_ind_x_address(uint8_t offset, Machine& machine);
     uint16_t get_ind_y_address(uint8_t offset, Machine& machine);
 }

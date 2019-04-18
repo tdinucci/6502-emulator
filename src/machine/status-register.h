@@ -24,7 +24,7 @@ namespace emu_6502 {
         StatusRegister() : Register<bitset<8>>("PS") {}
 
         StatusRegister(const StatusRegister&) = delete;
-        StatusRegister& operator=(const StatusRegister&) = delete;
+        virtual StatusRegister& operator=(const StatusRegister&) = delete;
 
         bool is_carry_set() const;
         bool is_zero_set() const;

@@ -26,7 +26,7 @@ namespace emu_6502 {
         Memory& get_memory();
         Stack& get_stack();
 
-        bool is_eop();
+        bool is_eop() const;
         uint8_t read_program_byte();
         void load(const vector<uint8_t>& program, uint16_t load_at);
         void execute();

@@ -92,7 +92,7 @@ namespace emu_6502 {
         pimpl->load(program, load_at);
     }
 
-    bool Machine::is_eop() {
+    bool Machine::is_eop() const {
         return pimpl->is_eop();
     }
 

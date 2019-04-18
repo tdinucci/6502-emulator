@@ -37,6 +37,18 @@ namespace emu_6502 {
         return address;
     }
 
+    uint16_t get_abs_x_address(Machine& machine, Cpu& cpu) {
+        auto low = machine.read_program_byte();
+        auto high = machine.read_program_byte();
+        return get_abs_x_address(low, high, machine.get_cpu());
+    }
+
+    uint16_t get_abs_y_address(Machine& machine, Cpu& cpu) {
+        auto low = machine.read_program_byte();
+        auto high = machine.read_program_byte();
+        return get_abs_y_address(low, high, machine.get_cpu());
+    }
+
     uint16_t get_ind_x_address(uint8_t offset, Machine& machine) {
         uint8_t paddress = machine.get_cpu().get_x().get_value() + offset;
         auto low = machine.get_memory().get_at(paddress);
