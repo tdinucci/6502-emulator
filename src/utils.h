@@ -9,6 +9,9 @@ using namespace std;
 
 namespace emu_6502 {
     string uint_to_hex(uint64_t value);
+
+    void set_zero_and_neg_flags(StatusRegister& ps, uint8_t value);
+
     uint8_t get_zpg_address(Machine& machine);
     uint8_t get_zpg_x_address(Machine& machine);
     uint8_t get_zpg_y_address(Machine& machine);

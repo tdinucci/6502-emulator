@@ -37,11 +37,6 @@ namespace emu_6502 {
         handlers.insert({Op::DEY, [this](Machine& machine) { dey(machine); }});
     }
 
-    void MathsOpcodeHandlerContainer::set_zero_neg(StatusRegister& ps, uint8_t value) {
-        ps.set_zero(value == 0);
-        ps.set_negative((value & 0x80) == 0x80);
-    }
-
     void MathsOpcodeHandlerContainer::adc(Machine& machine, uint8_t value) {
         auto& cpu = machine.get_cpu();
         auto init_a = cpu.get_a().get_value();
@@ -55,7 +50,7 @@ namespace emu_6502 {
         auto a = cpu.get_a().get_value();
 
         // 'a' may be 0 if the result wasn't 0, i.e. the cary bit is set
-        set_zero_neg(cpu.get_ps(), a);
+        set_zero_and_neg_flags(cpu.get_ps(), a);
         cpu.get_ps().set_carry(result > 0xFF);
         cpu.get_ps().set_overflow(
                 (value < 0x7F && init_a < 0x7F && a > 0x7F) ||
@@ -137,7 +132,7 @@ namespace emu_6502 {
         uint8_t value = machine.get_memory().get_at(address) - 1;
         machine.get_memory().set_at(address, value);
 
-        set_zero_neg(machine.get_cpu().get_ps(), value);
+        set_zero_and_neg_flags(machine.get_cpu().get_ps(), value);
     }
 
     void MathsOpcodeHandlerContainer::dec_zpg(Machine& machine) {
@@ -160,7 +155,7 @@ namespace emu_6502 {
         uint8_t value = machine.get_memory().get_at(address) + 1;
         machine.get_memory().set_at(address, value);
 
-        set_zero_neg(machine.get_cpu().get_ps(), value);
+        set_zero_and_neg_flags(machine.get_cpu().get_ps(), value);
     }
 
     void MathsOpcodeHandlerContainer::inc_zpg(Machine& machine) {
@@ -183,7 +178,7 @@ namespace emu_6502 {
         uint8_t value = reg.get_value() - 1;
         reg.set_value(value);
 
-        set_zero_neg(machine.get_cpu().get_ps(), value);
+        set_zero_and_neg_flags(machine.get_cpu().get_ps(), value);
     }
 
     void MathsOpcodeHandlerContainer::dex(Machine& machine) {
@@ -198,7 +193,7 @@ namespace emu_6502 {
         uint8_t value = reg.get_value() + 1;
         reg.set_value(value);
 
-        set_zero_neg(machine.get_cpu().get_ps(), value);
+        set_zero_and_neg_flags(machine.get_cpu().get_ps(), value);
     }
 
     void MathsOpcodeHandlerContainer::inx(Machine& machine) {

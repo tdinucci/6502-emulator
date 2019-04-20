@@ -17,8 +17,6 @@ namespace emu_6502 {
         OpcodeHandlerContainer(const OpcodeHandlerContainer& other) = delete;
         OpcodeHandlerContainer operator=(const OpcodeHandlerContainer& other) = delete;
 
-        virtual ~OpcodeHandlerContainer() {};
-
         const unordered_map<uint8_t, function<void(Machine&)>>& get_handlers();
     };
 }

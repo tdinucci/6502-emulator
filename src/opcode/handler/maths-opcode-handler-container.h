@@ -41,8 +41,6 @@ namespace emu_6502 {
             INY = 0xC8
         };
 
-        void set_zero_neg(StatusRegister& ps, uint8_t value);
-
         void adc(Machine& machine, uint8_t value);
         void adc_imm(Machine& machine);
         void adc_zpg(Machine& machine);

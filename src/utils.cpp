@@ -8,6 +8,11 @@ namespace emu_6502 {
         return ss.str();
     }
 
+    void set_zero_and_neg_flags(StatusRegister& ps, uint8_t value) {
+        ps.set_zero(value == 0);
+        ps.set_negative((value & 0x80) == 0x80);
+    }
+
     uint8_t get_zpg_address(Machine& machine) {
         return machine.read_program_byte();
     }
