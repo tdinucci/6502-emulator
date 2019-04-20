@@ -16,6 +16,15 @@ namespace emu_6502 {
             ADC_IND_X = 0x61,
             ADC_IND_Y = 0x71,
 
+            SBC_IMM = 0xE9,
+            SBC_ZPG = 0xE5,
+            SBC_ZPG_X = 0xF5,
+            SBC_ABS = 0xED,
+            SBC_ABS_X = 0xFD,
+            SBC_ABS_Y = 0xF9,
+            SBC_IND_X = 0xE1,
+            SBC_IND_Y = 0xF1,
+
             DEC_ZPG = 0xC6,
             DEC_ZPG_X = 0xD6,
             DEC_ABS = 0xCE,
@@ -29,16 +38,7 @@ namespace emu_6502 {
             DEX = 0xCA,
             DEY = 0x88,
             INX = 0xE8,
-            INY = 0xC8,
-
-            SBC_IMM = 0x0,
-            SBC_ZPG = 0x0,
-            SBC_ZPG_X = 0x0,
-            SBC_ABS = 0x0,
-            SBC_ABS_X = 0x0,
-            SBC_ABS_Y = 0x0,
-            SBC_IND_X = 0x0,
-            SBC_IND_Y = 0x0
+            INY = 0xC8
         };
 
         void set_zero_neg(StatusRegister& ps, uint8_t value);
@@ -52,6 +52,16 @@ namespace emu_6502 {
         void adc_abs_y(Machine& machine);
         void adc_ind_x(Machine& machine);
         void adc_ind_y(Machine& machine);
+
+        void sbc(Machine& machine, uint8_t value);
+        void sbc_imm(Machine& machine);
+        void sbc_zpg(Machine& machine);
+        void sbc_zpg_x(Machine& machine);
+        void sbc_abs(Machine& machine);
+        void sbc_abs_x(Machine& machine);
+        void sbc_abs_y(Machine& machine);
+        void sbc_ind_x(Machine& machine);
+        void sbc_ind_y(Machine& machine);
 
         void dec(Machine& machine, uint16_t address);
         void dec_zpg(Machine& machine);
@@ -72,15 +82,6 @@ namespace emu_6502 {
         void in(Machine& machine, Register<uint8_t>& reg);
         void inx(Machine& machine);
         void iny(Machine& machine);
-
-        void sbc_imm(Machine& machine);
-        void sbc_zpg(Machine& machine);
-        void sbc_zpg_x(Machine& machine);
-        void sbc_abs(Machine& machine);
-        void sbc_abs_x(Machine& machine);
-        void sbc_abs_y(Machine& machine);
-        void sbc_ind_x(Machine& machine);
-        void sbc_ind_y(Machine& machine);
 
     public:
         MathsOpcodeHandlerContainer();

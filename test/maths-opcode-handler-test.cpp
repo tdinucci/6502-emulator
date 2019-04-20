@@ -13,6 +13,15 @@ const uint8_t ADC_ABS_Y = 0x79;
 const uint8_t ADC_IND_X = 0x61;
 const uint8_t ADC_IND_Y = 0x71;
 
+const uint8_t SBC_IMM = 0xE9;
+const uint8_t SBC_ZPG = 0xE5;
+const uint8_t SBC_ZPG_X = 0xF5;
+const uint8_t SBC_ABS = 0xED;
+const uint8_t SBC_ABS_X = 0xFD;
+const uint8_t SBC_ABS_Y = 0xF9;
+const uint8_t SBC_IND_X = 0xE1;
+const uint8_t SBC_IND_Y = 0xF1;
+
 const uint8_t DEC_ZPG = 0xC6;
 const uint8_t DEC_ZPG_X = 0xD6;
 const uint8_t DEC_ABS = 0xCE;
@@ -189,6 +198,148 @@ TEST(MathsOpcodeHandlerContainer, ADC_IND_Y) {
 
     ASSERT_EQ(56, machine->get_cpu().get_a().get_value());
     ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_IMM) {
+    auto machine = create_machine({SBC_IMM, 0x20});
+    machine->get_cpu().get_a().set_value(0x50);
+    machine->execute();
+
+    ASSERT_EQ(0x30, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true; // indicates no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_IMM_WithBorrow) {
+    auto machine = create_machine({SBC_IMM, 0xf0});
+    machine->get_cpu().get_a().set_value(0xd0);
+    machine->execute();
+
+    ASSERT_EQ(0xe0, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = false; // indicates there was a borrow
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_IMM_WithOverflow) {
+    auto machine = create_machine({SBC_IMM, 0xb0});
+    machine->get_cpu().get_a().set_value(0x50);
+    machine->execute();
+
+    ASSERT_EQ(0xa0, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = false; // was a borrow
+    flags.negative = true;
+    flags.overflow = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_IMM_ZeroFlag) {
+    auto machine = create_machine({SBC_IMM, 50});
+    machine->get_cpu().get_a().set_value(50);
+    machine->execute();
+
+    ASSERT_EQ(0, machine->get_cpu().get_a().get_value());
+
+    RegisterFlagSet flags{};
+    flags.zero = true;
+    flags.carry = true; // no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_ZPG) {
+    auto machine = create_machine({SBC_ZPG, 0xf1});
+    machine->get_cpu().get_a().set_value(36);
+    machine->get_memory().set_at(0xf1, 20);
+    machine->execute();
+
+    ASSERT_EQ(16, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true; // no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_ZPG_X) {
+    auto machine = create_machine({SBC_ZPG_X, 0xf1});
+    machine->get_cpu().get_a().set_value(36);
+    machine->get_cpu().get_x().set_value(5);
+    machine->get_memory().set_at(0xf6, 20);
+    machine->execute();
+
+    ASSERT_EQ(16, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true; // no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_ABS) {
+    auto machine = create_machine({SBC_ABS, 0xf1, 0x36});
+    machine->get_cpu().get_a().set_value(36);
+    machine->get_memory().set_at(0x36f1, 20);
+    machine->execute();
+
+    ASSERT_EQ(16, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true; // no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_ABS_X) {
+    auto machine = create_machine({SBC_ABS_X, 0xf1, 0x36});
+    machine->get_cpu().get_a().set_value(36);
+    machine->get_cpu().get_x().set_value(8);
+    machine->get_memory().set_at(0x36f9, 20);
+    machine->execute();
+
+    ASSERT_EQ(16, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true; // no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_ABS_Y) {
+    auto machine = create_machine({SBC_ABS_Y, 0xf1, 0x36});
+    machine->get_cpu().get_a().set_value(36);
+    machine->get_cpu().get_y().set_value(8);
+    machine->get_memory().set_at(0x36f9, 20);
+    machine->execute();
+
+    ASSERT_EQ(16, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true; // no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_IND_X) {
+    auto machine = create_machine({SBC_IND_X, 0x41});
+    machine->get_cpu().get_x().set_value(0x22);
+    machine->get_cpu().get_a().set_value(36);
+    machine->get_memory().set_at(0x63, 0x34);
+    machine->get_memory().set_at(0x64, 0x12);
+    machine->get_memory().set_at(0x1234, 20);
+    machine->execute();
+
+    ASSERT_EQ(16, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true; // no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, SBC_IND_Y) {
+    auto machine = create_machine({SBC_IND_Y, 0x41});
+    machine->get_cpu().get_y().set_value(0x22);
+    machine->get_cpu().get_a().set_value(36);
+    machine->get_memory().set_at(0x41, 0x34);
+    machine->get_memory().set_at(0x42, 0x12);
+    machine->get_memory().set_at(0x1256, 20);
+    machine->execute();
+
+    ASSERT_EQ(16, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true; // no borrow
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
 }
 
 TEST(MathsOpcodeHandlerContainer, DEC_ZPG) {

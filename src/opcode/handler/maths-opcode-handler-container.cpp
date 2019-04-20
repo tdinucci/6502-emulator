@@ -12,6 +12,15 @@ namespace emu_6502 {
         handlers.insert({Op::ADC_IND_X, [this](Machine& machine) { adc_ind_x(machine); }});
         handlers.insert({Op::ADC_IND_Y, [this](Machine& machine) { adc_ind_y(machine); }});
 
+        handlers.insert({Op::SBC_IMM, [this](Machine& machine) { sbc_imm(machine); }});
+        handlers.insert({Op::SBC_ZPG, [this](Machine& machine) { sbc_zpg(machine); }});
+        handlers.insert({Op::SBC_ZPG_X, [this](Machine& machine) { sbc_zpg_x(machine); }});
+        handlers.insert({Op::SBC_ABS, [this](Machine& machine) { sbc_abs(machine); }});
+        handlers.insert({Op::SBC_ABS_X, [this](Machine& machine) { sbc_abs_x(machine); }});
+        handlers.insert({Op::SBC_ABS_Y, [this](Machine& machine) { sbc_abs_y(machine); }});
+        handlers.insert({Op::SBC_IND_X, [this](Machine& machine) { sbc_ind_x(machine); }});
+        handlers.insert({Op::SBC_IND_Y, [this](Machine& machine) { sbc_ind_y(machine); }});
+
         handlers.insert({Op::DEC_ZPG, [this](Machine& machine) { dec_zpg(machine); }});
         handlers.insert({Op::DEC_ZPG_X, [this](Machine& machine) { dec_zpg_x(machine); }});
         handlers.insert({Op::DEC_ABS, [this](Machine& machine) { dec_abs(machine); }});
@@ -83,6 +92,43 @@ namespace emu_6502 {
 
     void MathsOpcodeHandlerContainer::adc_ind_y(Machine& machine) {
         adc(machine, machine.get_memory().get_at(get_ind_y_address(machine)));
+    }
+
+    void MathsOpcodeHandlerContainer::sbc(Machine& machine, uint8_t value) {
+        // subtract is same as add negative value (i.e. add accumulator to the twos compliment of 'value')
+        adc(machine, (0xFF ^ value) + 1);
+    }
+
+    void MathsOpcodeHandlerContainer::sbc_imm(Machine& machine) {
+        sbc(machine, machine.read_program_byte());
+    }
+
+    void MathsOpcodeHandlerContainer::sbc_zpg(Machine& machine) {
+        sbc(machine, machine.get_memory().get_at(get_zpg_address(machine)));
+    }
+
+    void MathsOpcodeHandlerContainer::sbc_zpg_x(Machine& machine) {
+        sbc(machine, machine.get_memory().get_at(get_zpg_x_address(machine)));
+    }
+
+    void MathsOpcodeHandlerContainer::sbc_abs(Machine& machine) {
+        sbc(machine, machine.get_memory().get_at(get_abs_address(machine)));
+    }
+
+    void MathsOpcodeHandlerContainer::sbc_abs_x(Machine& machine) {
+        sbc(machine, machine.get_memory().get_at(get_abs_x_address(machine)));
+    }
+
+    void MathsOpcodeHandlerContainer::sbc_abs_y(Machine& machine) {
+        sbc(machine, machine.get_memory().get_at(get_abs_y_address(machine)));
+    }
+
+    void MathsOpcodeHandlerContainer::sbc_ind_x(Machine& machine) {
+        sbc(machine, machine.get_memory().get_at(get_ind_x_address(machine)));
+    }
+
+    void MathsOpcodeHandlerContainer::sbc_ind_y(Machine& machine) {
+        sbc(machine, machine.get_memory().get_at(get_ind_y_address(machine)));
     }
 
     void MathsOpcodeHandlerContainer::dec(Machine& machine, uint16_t address) {
@@ -159,29 +205,5 @@ namespace emu_6502 {
 
     void MathsOpcodeHandlerContainer::iny(Machine& machine) {
         in(machine, machine.get_cpu().get_y());
-    }
-
-    void MathsOpcodeHandlerContainer::sbc_imm(Machine& machine) {
-    }
-
-    void MathsOpcodeHandlerContainer::sbc_zpg(Machine& machine) {
-    }
-
-    void MathsOpcodeHandlerContainer::sbc_zpg_x(Machine& machine) {
-    }
-
-    void MathsOpcodeHandlerContainer::sbc_abs(Machine& machine) {
-    }
-
-    void MathsOpcodeHandlerContainer::sbc_abs_x(Machine& machine) {
-    }
-
-    void MathsOpcodeHandlerContainer::sbc_abs_y(Machine& machine) {
-    }
-
-    void MathsOpcodeHandlerContainer::sbc_ind_x(Machine& machine) {
-    }
-
-    void MathsOpcodeHandlerContainer::sbc_ind_y(Machine& machine) {
     }
 }
