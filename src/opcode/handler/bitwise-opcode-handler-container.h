@@ -120,7 +120,12 @@ namespace emu_6502 {
         void rol_abs(Machine& machine);
         void rol_abs_x(Machine& machine);
 
-
+        void ror_at(Machine& machine, uint16_t address);
+        void ror_acc(Machine& machine);
+        void ror_zpg(Machine& machine);
+        void ror_zpg_x(Machine& machine);
+        void ror_abs(Machine& machine);
+        void ror_abs_x(Machine& machine);
 
     public:
         BitwiseOpcodeHandlerContainer();

@@ -52,6 +52,12 @@ const uint8_t ROL_ZPG_X = 0x36;
 const uint8_t ROL_ABS = 0x2E;
 const uint8_t ROL_ABS_X = 0x3E;
 
+const uint8_t ROR_ACC = 0x6A;
+const uint8_t ROR_ZPG = 0x66;
+const uint8_t ROR_ZPG_X = 0x76;
+const uint8_t ROR_ABS = 0x6E;
+const uint8_t ROR_ABS_X = 0x7E;
+
 TEST(LoadOpcodeHandlerContainer, AND_IMM) {
     auto machine = create_machine({AND_IMM, 0x23});
     machine->get_cpu().get_a().set_value(0x13);
@@ -782,4 +788,154 @@ TEST(LoadOpcodeHandlerContainer, ROL_ZPG_ZeroFlag) {
     flags.carry = true;
     flags.zero = true;
     ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROL_ZPG_X) {
+    auto machine = create_machine({ROL_ZPG_X, 0x10});
+    machine->get_cpu().get_x().set_value(0x5);
+    machine->get_memory().set_at(0x15, 0x09);
+    machine->execute();
+
+    ASSERT_EQ(0x12, machine->get_memory().get_at(0x15));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROL_ABS) {
+    auto machine = create_machine({ROL_ABS, 0x10, 0x11});
+    machine->get_memory().set_at(0x1110, 0x09);
+    machine->execute();
+
+    ASSERT_EQ(0x12, machine->get_memory().get_at(0x1110));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROL_ABS_X) {
+    auto machine = create_machine({ROL_ABS_X, 0x10, 0x11});
+    machine->get_cpu().get_x().set_value(0x5);
+    machine->get_memory().set_at(0x1115, 0x09);
+    machine->execute();
+
+    ASSERT_EQ(0x12, machine->get_memory().get_at(0x1115));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ACC) {
+    auto machine = create_machine({ROR_ACC});
+    machine->get_cpu().get_a().set_value(0x08);
+    machine->execute();
+
+    ASSERT_EQ(0x4, machine->get_cpu().get_a().get_value());
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ACC_OldCarry) {
+    auto machine = create_machine({ROR_ACC});
+    machine->get_cpu().get_ps().set_carry(true);
+    machine->get_cpu().get_a().set_value(0x08);
+    machine->execute();
+
+    ASSERT_EQ(0x84, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ACC_NegativeAndCarryFlag) {
+    auto machine = create_machine({ROR_ACC});
+    machine->get_cpu().get_ps().set_carry(true);
+    machine->get_cpu().get_a().set_value(0x09);
+    machine->execute();
+
+    ASSERT_EQ(0x84, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true;
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ACC_ZeroFlag) {
+    auto machine = create_machine({ROR_ACC});
+    machine->get_cpu().get_a().set_value(0x01);
+    machine->execute();
+
+    ASSERT_EQ(0x0, machine->get_cpu().get_a().get_value());
+    RegisterFlagSet flags{};
+    flags.carry = true;
+    flags.zero = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ZPG) {
+    auto machine = create_machine({ROR_ZPG, 0x10});
+    machine->get_memory().set_at(0x10, 0x08);
+    machine->execute();
+
+    ASSERT_EQ(0x4, machine->get_memory().get_at(0x10));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ZPG_OldCarry) {
+    auto machine = create_machine({ROR_ZPG, 0x10});
+    machine->get_cpu().get_ps().set_carry(true);
+    machine->get_memory().set_at(0x10, 0x08);
+    machine->execute();
+
+    ASSERT_EQ(0x84, machine->get_memory().get_at(0x10));
+    RegisterFlagSet flags{};
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ZPG_NegativeAndCarryFlag) {
+    auto machine = create_machine({ROR_ZPG, 0x10});
+    machine->get_cpu().get_ps().set_carry(true);
+    machine->get_memory().set_at(0x10, 0x09);
+    machine->execute();
+
+    ASSERT_EQ(0x84, machine->get_memory().get_at(0x10));
+    RegisterFlagSet flags{};
+    flags.carry = true;
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ZPG_ZeroFlag) {
+    auto machine = create_machine({ROR_ZPG, 0x10});
+    machine->get_memory().set_at(0x10, 0x01);
+    machine->execute();
+
+    ASSERT_EQ(0x0, machine->get_memory().get_at(0x10));
+    RegisterFlagSet flags{};
+    flags.carry = true;
+    flags.zero = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ZPG_X) {
+    auto machine = create_machine({ROR_ZPG_X, 0x10});
+    machine->get_cpu().get_x().set_value(0x5);
+    machine->get_memory().set_at(0x15, 0x08);
+    machine->execute();
+
+    ASSERT_EQ(0x4, machine->get_memory().get_at(0x15));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ABS) {
+    auto machine = create_machine({ROR_ABS, 0x10, 0x75});
+    machine->get_memory().set_at(0x7510, 0x08);
+    machine->execute();
+
+    ASSERT_EQ(0x4, machine->get_memory().get_at(0x7510));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(LoadOpcodeHandlerContainer, ROR_ABS_X) {
+    auto machine = create_machine({ROR_ABS_X, 0x10, 0x75});
+    machine->get_cpu().get_x().set_value(0x5);
+    machine->get_memory().set_at(0x7515, 0x08);
+    machine->execute();
+
+    ASSERT_EQ(0x4, machine->get_memory().get_at(0x7515));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
 }

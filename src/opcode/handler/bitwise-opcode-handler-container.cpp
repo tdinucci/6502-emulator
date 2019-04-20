@@ -50,6 +50,12 @@ namespace emu_6502 {
         handlers.insert({Op::ROL_ZPG_X, [this](Machine& machine) { rol_zpg_x(machine); }});
         handlers.insert({Op::ROL_ABS, [this](Machine& machine) { rol_abs(machine); }});
         handlers.insert({Op::ROL_ABS_X, [this](Machine& machine) { rol_abs_x(machine); }});
+
+        handlers.insert({Op::ROR_ACC, [this](Machine& machine) { ror_acc(machine); }});
+        handlers.insert({Op::ROR_ZPG, [this](Machine& machine) { ror_zpg(machine); }});
+        handlers.insert({Op::ROR_ZPG_X, [this](Machine& machine) { ror_zpg_x(machine); }});
+        handlers.insert({Op::ROR_ABS, [this](Machine& machine) { ror_abs(machine); }});
+        handlers.insert({Op::ROR_ABS_X, [this](Machine& machine) { ror_abs_x(machine); }});
     }
 
     void BitwiseOpcodeHandlerContainer::do_and(Machine& machine, uint8_t value) {
@@ -310,5 +316,47 @@ namespace emu_6502 {
 
     void BitwiseOpcodeHandlerContainer::rol_abs_x(Machine& machine) {
         rol_at(machine, get_abs_x_address(machine));
+    }
+
+    void BitwiseOpcodeHandlerContainer::ror_at(Machine& machine, uint16_t address) {
+        auto orig = machine.get_memory().get_at(address);
+        auto result = orig >> 1;
+
+        auto& ps = machine.get_cpu().get_ps();
+        if (ps.is_carry_set())
+            result += 0x80;
+
+        machine.get_memory().set_at(address, result);
+        ps.set_carry((orig & 1) == 1);
+        set_zero_and_neg_flags(ps, result);
+    }
+
+    void BitwiseOpcodeHandlerContainer::ror_acc(Machine& machine) {
+        auto orig = machine.get_cpu().get_a().get_value();
+        auto result = orig >> 1;
+
+        auto& ps = machine.get_cpu().get_ps();
+        if (ps.is_carry_set())
+            result += 0x80;
+
+        machine.get_cpu().get_a().set_value(result);
+        ps.set_carry((orig & 1) == 1);
+        set_zero_and_neg_flags(ps, result);
+    }
+
+    void BitwiseOpcodeHandlerContainer::ror_zpg(Machine& machine) {
+        ror_at(machine, get_zpg_address(machine));
+    }
+
+    void BitwiseOpcodeHandlerContainer::ror_zpg_x(Machine& machine) {
+        ror_at(machine, get_zpg_x_address(machine));
+    }
+
+    void BitwiseOpcodeHandlerContainer::ror_abs(Machine& machine) {
+        ror_at(machine, get_abs_address(machine));
+    }
+
+    void BitwiseOpcodeHandlerContainer::ror_abs_x(Machine& machine) {
+        ror_at(machine, get_abs_x_address(machine));
     }
 }
