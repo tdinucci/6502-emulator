@@ -95,8 +95,10 @@ namespace emu_6502 {
     }
 
     void MathsOpcodeHandlerContainer::sbc(Machine& machine, uint8_t value) {
-        // subtract is same as add negative value (i.e. add accumulator to the twos compliment of 'value')
-        adc(machine, (0xFF ^ value) + 1);
+        // subtract is same as add negative value (i.e. add accumulator to the twos compliment of 'value').
+        // an added complication here is that the inversion of the carry flag is used to indicate a borrow
+        uint8_t add = machine.get_cpu().get_ps().is_carry_set() ? 0 : 1;
+        adc(machine, (0xFF ^ value) + add);
     }
 
     void MathsOpcodeHandlerContainer::sbc_imm(Machine& machine) {
