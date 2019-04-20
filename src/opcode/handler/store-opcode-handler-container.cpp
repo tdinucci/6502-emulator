@@ -25,48 +25,34 @@ namespace emu_6502 {
     }
 
     void StoreOpcodeHandlerContainer::st_zpg(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_zpg_address(machine.read_program_byte());
-        store_to(machine, reg, addr);
+        store_to(machine, reg, get_zpg_address(machine));
     }
 
     void StoreOpcodeHandlerContainer::st_zpg_x(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_zpg_x_address(machine.read_program_byte(), machine.get_cpu());
-        store_to(machine, reg, addr);
+        store_to(machine, reg, get_zpg_x_address(machine));
     }
 
     void StoreOpcodeHandlerContainer::st_zpg_y(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_zpg_y_address(machine.read_program_byte(), machine.get_cpu());
-        store_to(machine, reg, addr);
+        store_to(machine, reg, get_zpg_y_address(machine));
     }
 
     void StoreOpcodeHandlerContainer::st_abs(Machine& machine, Register<uint8_t>& reg) {
-        auto low = machine.read_program_byte();
-        auto high = machine.read_program_byte();
-        auto addr = get_abs_address(low, high);
-        store_to(machine, reg, addr);
+        store_to(machine, reg, get_abs_address(machine));
     }
 
     void StoreOpcodeHandlerContainer::st_abs_x(Machine& machine, Register<uint8_t>& reg) {
-        auto low = machine.read_program_byte();
-        auto high = machine.read_program_byte();
-        auto addr = get_abs_x_address(low, high, machine.get_cpu());
-        store_to(machine, reg, addr);
+        store_to(machine, reg, get_abs_x_address(machine));
     }
 
     void StoreOpcodeHandlerContainer::st_abs_y(Machine& machine, Register<uint8_t>& reg) {
-        auto low = machine.read_program_byte();
-        auto high = machine.read_program_byte();
-        auto addr = get_abs_y_address(low, high, machine.get_cpu());
-        store_to(machine, reg, addr);
+        store_to(machine, reg, get_abs_y_address(machine));
     }
 
     void StoreOpcodeHandlerContainer::st_ind_x(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_ind_x_address(machine.read_program_byte(), machine);
-        store_to(machine, reg, addr);
+        store_to(machine, reg, get_ind_x_address(machine));
     }
 
     void StoreOpcodeHandlerContainer::st_ind_y(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_ind_y_address(machine.read_program_byte(), machine);
-        store_to(machine, reg, addr);
+        store_to(machine, reg, get_ind_y_address(machine));
     }
 }

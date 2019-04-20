@@ -45,48 +45,34 @@ namespace emu_6502 {
     }
 
     void LoadOpcodeHandlerContainer::ld_zpg(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_zpg_address(machine.read_program_byte());
-        set_from(machine, reg, addr);
+        set_from(machine, reg, get_zpg_address(machine));
     }
 
     void LoadOpcodeHandlerContainer::ld_zpg_x(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_zpg_x_address(machine.read_program_byte(), machine.get_cpu());
-        set_from(machine, reg, addr);
+        set_from(machine, reg, get_zpg_x_address(machine));
     }
 
     void LoadOpcodeHandlerContainer::ld_zpg_y(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_zpg_y_address(machine.read_program_byte(), machine.get_cpu());
-        set_from(machine, reg, addr);
+        set_from(machine, reg, get_zpg_y_address(machine));
     }
 
     void LoadOpcodeHandlerContainer::ld_abs(Machine& machine, Register<uint8_t>& reg) {
-        auto low = machine.read_program_byte();
-        auto high = machine.read_program_byte();
-        auto addr = get_abs_address(low, high);
-        set_from(machine, reg, addr);
+        set_from(machine, reg, get_abs_address(machine));
     }
 
     void LoadOpcodeHandlerContainer::ld_abs_x(Machine& machine, Register<uint8_t>& reg) {
-        auto low = machine.read_program_byte();
-        auto high = machine.read_program_byte();
-        auto addr = get_abs_x_address(low, high, machine.get_cpu());
-        set_from(machine, reg, addr);
+        set_from(machine, reg, get_abs_x_address(machine));
     }
 
     void LoadOpcodeHandlerContainer::ld_abs_y(Machine& machine, Register<uint8_t>& reg) {
-        auto low = machine.read_program_byte();
-        auto high = machine.read_program_byte();
-        auto addr = get_abs_y_address(low, high, machine.get_cpu());
-        set_from(machine, reg, addr);
+        set_from(machine, reg, get_abs_y_address(machine));
     }
 
     void LoadOpcodeHandlerContainer::ld_ind_x(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_ind_x_address(machine.read_program_byte(), machine);
-        set_from(machine, reg, addr);
+        set_from(machine, reg, get_ind_x_address(machine));
     }
 
     void LoadOpcodeHandlerContainer::ld_ind_y(Machine& machine, Register<uint8_t>& reg) {
-        auto addr = get_ind_y_address(machine.read_program_byte(), machine);
-        set_from(machine, reg, addr);
+        set_from(machine, reg, get_ind_y_address(machine));
     }
 }

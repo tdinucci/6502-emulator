@@ -13,6 +13,21 @@ const uint8_t ADC_ABS_Y = 0x79;
 const uint8_t ADC_IND_X = 0x61;
 const uint8_t ADC_IND_Y = 0x71;
 
+const uint8_t DEC_ZPG = 0xC6;
+const uint8_t DEC_ZPG_X = 0xD6;
+const uint8_t DEC_ABS = 0xCE;
+const uint8_t DEC_ABS_X = 0xDE;
+
+const uint8_t INC_ZPG = 0xE6;
+const uint8_t INC_ZPG_X = 0xF6;
+const uint8_t INC_ABS = 0xEE;
+const uint8_t INC_ABS_X = 0xFE;
+
+const uint8_t DEX = 0xCA;
+const uint8_t DEY = 0x88;
+const uint8_t INX = 0xE8;
+const uint8_t INY = 0xC8;
+
 TEST(MathsOpcodeHandlerContainer, ADC_IMM) {
     auto machine = create_machine({ADC_IMM, 36});
     machine->get_cpu().get_a().set_value(36);
@@ -173,5 +188,213 @@ TEST(MathsOpcodeHandlerContainer, ADC_IND_Y) {
     machine->execute();
 
     ASSERT_EQ(56, machine->get_cpu().get_a().get_value());
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEC_ZPG) {
+    auto machine = create_machine({DEC_ZPG, 0xf1});
+    machine->get_memory().set_at(0xf1, 20);
+    machine->execute();
+
+    ASSERT_EQ(19, machine->get_memory().get_at(0xf1));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEC_ZPG_ZeroFlag) {
+    auto machine = create_machine({DEC_ZPG, 0xf1});
+    machine->get_memory().set_at(0xf1, 1);
+    machine->execute();
+
+    ASSERT_EQ(0, machine->get_memory().get_at(0xf1));
+
+    RegisterFlagSet flags{};
+    flags.zero = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEC_ZPG_NegativeFlag) {
+    auto machine = create_machine({DEC_ZPG, 0xf1});
+    machine->get_memory().set_at(0xf1, 0);
+    machine->execute();
+
+    ASSERT_EQ(0xFF, machine->get_memory().get_at(0xf1));
+
+    RegisterFlagSet flags{};
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEC_ZPG_X) {
+    auto machine = create_machine({DEC_ZPG_X, 0x45});
+    machine->get_cpu().get_x().set_value(0x10);
+    machine->get_memory().set_at(0x55, 20);
+    machine->execute();
+
+    ASSERT_EQ(19, machine->get_memory().get_at(0x55));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEC_ABS) {
+    auto machine = create_machine({DEC_ABS, 0x45, 0x1a});
+    machine->get_memory().set_at(0x1a45, 20);
+    machine->execute();
+
+    ASSERT_EQ(19, machine->get_memory().get_at(0x1a45));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEC_ABS_X) {
+    auto machine = create_machine({DEC_ABS_X, 0x45, 0x1a});
+    machine->get_cpu().get_x().set_value(0x10);
+    machine->get_memory().set_at(0x1a55, 20);
+    machine->execute();
+
+    ASSERT_EQ(19, machine->get_memory().get_at(0x1a55));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, INC_ZPG) {
+    auto machine = create_machine({INC_ZPG, 0xf1});
+    machine->get_memory().set_at(0xf1, 20);
+    machine->execute();
+
+    ASSERT_EQ(21, machine->get_memory().get_at(0xf1));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, INC_ZPG_ZeroFlag) {
+    auto machine = create_machine({INC_ZPG, 0xf1});
+    machine->get_memory().set_at(0xf1, 0xff);
+    machine->execute();
+
+    ASSERT_EQ(0, machine->get_memory().get_at(0xf1));
+
+    RegisterFlagSet flags{};
+    flags.zero = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, INC_ZPG_NegativeFlag) {
+    auto machine = create_machine({INC_ZPG, 0xf1});
+    machine->get_memory().set_at(0xf1, 0x7f);
+    machine->execute();
+
+    ASSERT_EQ(0x80, machine->get_memory().get_at(0xf1));
+
+    RegisterFlagSet flags{};
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, INC_ZPG_X) {
+    auto machine = create_machine({INC_ZPG_X, 0x45});
+    machine->get_cpu().get_x().set_value(0x10);
+    machine->get_memory().set_at(0x55, 20);
+    machine->execute();
+
+    ASSERT_EQ(21, machine->get_memory().get_at(0x55));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, INC_ABS) {
+    auto machine = create_machine({INC_ABS, 0x45, 0x1a});
+    machine->get_memory().set_at(0x1a45, 20);
+    machine->execute();
+
+    ASSERT_EQ(21, machine->get_memory().get_at(0x1a45));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, INC_ABS_X) {
+    auto machine = create_machine({INC_ABS_X, 0x45, 0x1a});
+    machine->get_cpu().get_x().set_value(0x10);
+    machine->get_memory().set_at(0x1a55, 20);
+    machine->execute();
+
+    ASSERT_EQ(21, machine->get_memory().get_at(0x1a55));
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, INX) {
+    auto machine = create_machine({INX});
+    machine->get_cpu().get_x().set_value(5);
+    machine->execute();
+
+    ASSERT_EQ(6, machine->get_cpu().get_x().get_value());
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, INX_ZeroFlag) {
+    auto machine = create_machine({INX});
+    machine->get_cpu().get_x().set_value(0xff);
+    machine->execute();
+
+    ASSERT_EQ(0, machine->get_cpu().get_x().get_value());
+
+    RegisterFlagSet flags{};
+    flags.zero = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, INX_NegativeFlag) {
+    auto machine = create_machine({INX});
+    machine->get_cpu().get_x().set_value(0x7f);
+    machine->execute();
+
+    ASSERT_EQ(0x80, machine->get_cpu().get_x().get_value());
+
+    RegisterFlagSet flags{};
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, INY) {
+    auto machine = create_machine({INY});
+    machine->get_cpu().get_y().set_value(5);
+    machine->execute();
+
+    ASSERT_EQ(6, machine->get_cpu().get_y().get_value());
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEX) {
+    auto machine = create_machine({DEX});
+    machine->get_cpu().get_x().set_value(5);
+    machine->execute();
+
+    ASSERT_EQ(4, machine->get_cpu().get_x().get_value());
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEX_ZeroFlag) {
+    auto machine = create_machine({DEX});
+    machine->get_cpu().get_x().set_value(1);
+    machine->execute();
+
+    ASSERT_EQ(0, machine->get_cpu().get_x().get_value());
+
+    RegisterFlagSet flags{};
+    flags.zero = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEX_NegativeFlag) {
+    auto machine = create_machine({DEX});
+    machine->get_cpu().get_x().set_value(0);
+    machine->execute();
+
+    ASSERT_EQ(0xff, machine->get_cpu().get_x().get_value());
+
+    RegisterFlagSet flags{};
+    flags.negative = true;
+    ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), flags));
+}
+
+TEST(MathsOpcodeHandlerContainer, DEY) {
+    auto machine = create_machine({DEY});
+    machine->get_cpu().get_y().set_value(5);
+    machine->execute();
+
+    ASSERT_EQ(4, machine->get_cpu().get_y().get_value());
     ASSERT_TRUE(are_flags_set(machine->get_cpu().get_ps(), RegisterFlagSet{}));
 }

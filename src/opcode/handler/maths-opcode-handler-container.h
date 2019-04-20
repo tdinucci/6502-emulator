@@ -41,6 +41,8 @@ namespace emu_6502 {
             SBC_IND_Y = 0x0
         };
 
+        void set_zero_neg(StatusRegister& ps, uint8_t value);
+
         void adc(Machine& machine, uint8_t value);
         void adc_imm(Machine& machine);
         void adc_zpg(Machine& machine);
@@ -51,13 +53,23 @@ namespace emu_6502 {
         void adc_ind_x(Machine& machine);
         void adc_ind_y(Machine& machine);
 
+        void dec(Machine& machine, uint16_t address);
         void dec_zpg(Machine& machine);
         void dec_zpg_x(Machine& machine);
         void dec_abs(Machine& machine);
         void dec_abs_x(Machine& machine);
 
+        void inc(Machine& machine, uint16_t address);
+        void inc_zpg(Machine& machine);
+        void inc_zpg_x(Machine& machine);
+        void inc_abs(Machine& machine);
+        void inc_abs_x(Machine& machine);
+
+        void de(Machine& machine, Register<uint8_t>& reg);
         void dex(Machine& machine);
         void dey(Machine& machine);
+
+        void in(Machine& machine, Register<uint8_t>& reg);
         void inx(Machine& machine);
         void iny(Machine& machine);
 
