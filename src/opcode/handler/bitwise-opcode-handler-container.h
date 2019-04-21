@@ -3,6 +3,7 @@
 
 #include "opcode-handler-container.h"
 
+
 namespace emu_6502 {
     class BitwiseOpcodeHandlerContainer : public OpcodeHandlerContainer {
     private:
@@ -99,6 +100,7 @@ namespace emu_6502 {
         void bit_zpg(Machine& machine);
         void bit_abs(Machine& machine);
 
+        void asl(Machine& machine, function<uint8_t()> get_value, function<void(uint8_t)> set_value);
         void asl_at(Machine& machine, uint16_t address);
         void asl_acc(Machine& machine);
         void asl_zpg(Machine& machine);
@@ -106,6 +108,7 @@ namespace emu_6502 {
         void asl_abs(Machine& machine);
         void asl_abs_x(Machine& machine);
 
+        void lsr(Machine& machine, function<uint8_t()> get_value, function<void(uint8_t)> set_value);
         void lsr_at(Machine& machine, uint16_t address);
         void lsr_acc(Machine& machine);
         void lsr_zpg(Machine& machine);
@@ -113,6 +116,7 @@ namespace emu_6502 {
         void lsr_abs(Machine& machine);
         void lsr_abs_x(Machine& machine);
 
+        void rol(Machine& machine, function<uint8_t()> get_value, function<void(uint8_t)> set_value);
         void rol_at(Machine& machine, uint16_t address);
         void rol_acc(Machine& machine);
         void rol_zpg(Machine& machine);
@@ -120,6 +124,7 @@ namespace emu_6502 {
         void rol_abs(Machine& machine);
         void rol_abs_x(Machine& machine);
 
+        void ror(Machine& machine, function<uint8_t()> get_value, function<void(uint8_t)> set_value);
         void ror_at(Machine& machine, uint16_t address);
         void ror_acc(Machine& machine);
         void ror_zpg(Machine& machine);

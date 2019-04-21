@@ -208,22 +208,26 @@ namespace emu_6502 {
         bit(machine, get_abs_address(machine));
     }
 
-    void BitwiseOpcodeHandlerContainer::asl_at(Machine& machine, uint16_t address) {
-        uint16_t result = machine.get_memory().get_at(address) << 1;
-        machine.get_memory().set_at(address, result);
+    void BitwiseOpcodeHandlerContainer::asl(emu_6502::Machine& machine, function<uint8_t()> get_value,
+                                            function<void(uint8_t)> set_value) {
+        uint16_t result = get_value() << 1;
+        set_value(result);
 
         auto& ps = machine.get_cpu().get_ps();
         ps.set_carry((result & 0x100) == 0x100);
         set_zero_and_neg_flags(ps, result);
     }
 
-    void BitwiseOpcodeHandlerContainer::asl_acc(Machine& machine) {
-        uint16_t result = machine.get_cpu().get_a().get_value() << 1;
-        machine.get_cpu().get_a().set_value(result);
+    void BitwiseOpcodeHandlerContainer::asl_at(Machine& machine, uint16_t address) {
+        asl(machine,
+            [&]() { return machine.get_memory().get_at(address); },
+            [&](uint8_t value) { machine.get_memory().set_at(address, value); });
+    }
 
-        auto& ps = machine.get_cpu().get_ps();
-        ps.set_carry((result & 0x100) == 0x100);
-        set_zero_and_neg_flags(ps, result);
+    void BitwiseOpcodeHandlerContainer::asl_acc(Machine& machine) {
+        asl(machine,
+            [&]() { return machine.get_cpu().get_a().get_value(); },
+            [&](uint8_t value) { machine.get_cpu().get_a().set_value(value); });
     }
 
     void BitwiseOpcodeHandlerContainer::asl_zpg(Machine& machine) {
@@ -242,24 +246,27 @@ namespace emu_6502 {
         asl_at(machine, get_abs_x_address(machine));
     }
 
-    void BitwiseOpcodeHandlerContainer::lsr_at(Machine& machine, uint16_t address) {
-        auto orig = machine.get_memory().get_at(address);
+    void BitwiseOpcodeHandlerContainer::lsr(emu_6502::Machine& machine, function<uint8_t()> get_value,
+                                            function<void(uint8_t)> set_value) {
+        auto orig = get_value();
         auto result = orig >> 1;
-        machine.get_memory().set_at(address, result);
+        set_value(result);
 
         auto& ps = machine.get_cpu().get_ps();
         ps.set_carry((orig & 1) == 1);
         ps.set_zero(result == 0);
     }
 
-    void BitwiseOpcodeHandlerContainer::lsr_acc(Machine& machine) {
-        auto orig = machine.get_cpu().get_a().get_value();
-        auto result = orig >> 1;
-        machine.get_cpu().get_a().set_value(result);
+    void BitwiseOpcodeHandlerContainer::lsr_at(Machine& machine, uint16_t address) {
+        lsr(machine,
+            [&]() { return machine.get_memory().get_at(address); },
+            [&](uint8_t value) { machine.get_memory().set_at(address, value); });
+    }
 
-        auto& ps = machine.get_cpu().get_ps();
-        ps.set_carry((orig & 1) == 1);
-        ps.set_zero(result == 0);
+    void BitwiseOpcodeHandlerContainer::lsr_acc(Machine& machine) {
+        lsr(machine,
+            [&]() { return machine.get_cpu().get_a().get_value(); },
+            [&](uint8_t value) { machine.get_cpu().get_a().set_value(value); });
     }
 
     void BitwiseOpcodeHandlerContainer::lsr_zpg(Machine& machine) {
@@ -278,28 +285,28 @@ namespace emu_6502 {
         lsr_at(machine, get_abs_x_address(machine));
     }
 
-    void BitwiseOpcodeHandlerContainer::rol_at(Machine& machine, uint16_t address) {
-        uint16_t result = machine.get_memory().get_at(address) << 1;
-
+    void BitwiseOpcodeHandlerContainer::rol(emu_6502::Machine& machine, function<uint8_t()> get_value,
+                                            function<void(uint8_t)> set_value) {
+        uint16_t result = get_value() << 1;
         auto& ps = machine.get_cpu().get_ps();
         if (ps.is_carry_set())
             result += 1;
 
-        machine.get_memory().set_at(address, result);
+        set_value(result);
         ps.set_carry((result & 0x100) == 0x100);
         set_zero_and_neg_flags(ps, result);
     }
 
+    void BitwiseOpcodeHandlerContainer::rol_at(Machine& machine, uint16_t address) {
+        rol(machine,
+            [&]() { return machine.get_memory().get_at(address); },
+            [&](uint8_t value) { machine.get_memory().set_at(address, value); });
+    }
+
     void BitwiseOpcodeHandlerContainer::rol_acc(Machine& machine) {
-        uint16_t result = machine.get_cpu().get_a().get_value() << 1;
-
-        auto& ps = machine.get_cpu().get_ps();
-        if (ps.is_carry_set())
-            result += 1;
-
-        machine.get_cpu().get_a().set_value(result);
-        ps.set_carry((result & 0x100) == 0x100);
-        set_zero_and_neg_flags(ps, result);
+        rol(machine,
+            [&]() { return machine.get_cpu().get_a().get_value(); },
+            [&](uint8_t value) { machine.get_cpu().get_a().set_value(value); });
     }
 
     void BitwiseOpcodeHandlerContainer::rol_zpg(Machine& machine) {
@@ -318,30 +325,30 @@ namespace emu_6502 {
         rol_at(machine, get_abs_x_address(machine));
     }
 
-    void BitwiseOpcodeHandlerContainer::ror_at(Machine& machine, uint16_t address) {
-        auto orig = machine.get_memory().get_at(address);
+    void BitwiseOpcodeHandlerContainer::ror(Machine& machine, function<uint8_t()> get_value,
+                                            function<void(uint8_t)> set_value) {
+        auto orig = get_value();
         auto result = orig >> 1;
 
         auto& ps = machine.get_cpu().get_ps();
         if (ps.is_carry_set())
             result += 0x80;
 
-        machine.get_memory().set_at(address, result);
+        set_value(result);
         ps.set_carry((orig & 1) == 1);
         set_zero_and_neg_flags(ps, result);
     }
 
+    void BitwiseOpcodeHandlerContainer::ror_at(Machine& machine, uint16_t address) {
+        ror(machine,
+            [&]() { return machine.get_memory().get_at(address); },
+            [&](uint8_t value) { machine.get_memory().set_at(address, value); });
+    }
+
     void BitwiseOpcodeHandlerContainer::ror_acc(Machine& machine) {
-        auto orig = machine.get_cpu().get_a().get_value();
-        auto result = orig >> 1;
-
-        auto& ps = machine.get_cpu().get_ps();
-        if (ps.is_carry_set())
-            result += 0x80;
-
-        machine.get_cpu().get_a().set_value(result);
-        ps.set_carry((orig & 1) == 1);
-        set_zero_and_neg_flags(ps, result);
+        ror(machine,
+            [&]() { return machine.get_cpu().get_a().get_value(); },
+            [&](uint8_t value) { machine.get_cpu().get_a().set_value(value); });
     }
 
     void BitwiseOpcodeHandlerContainer::ror_zpg(Machine& machine) {
