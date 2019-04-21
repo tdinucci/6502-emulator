@@ -6,6 +6,7 @@
 #include "handler/bitwise-opcode-handler-container.h"
 #include "handler/status-opcode-handler-container.h"
 #include "handler/compare-opcode-handler-container.h"
+#include "handler/stack-opcode-handler-container.h"
 #include "../utils.h"
 
 namespace emu_6502 {
@@ -18,6 +19,7 @@ namespace emu_6502 {
         handler_containers.push_back(make_unique<BitwiseOpcodeHandlerContainer>());
         handler_containers.push_back(make_unique<StatusOpcodeHandlerContainer>());
         handler_containers.push_back(make_unique<CompareOpcodeHandlerContainer>());
+        handler_containers.push_back(make_unique<StackOpcodeHandlerContainer>());
 
         init_handlers();
     }
