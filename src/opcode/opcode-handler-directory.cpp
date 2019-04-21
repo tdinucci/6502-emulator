@@ -4,6 +4,7 @@
 #include "handler/transfer-opcode-handler-container.h"
 #include "handler/maths-opcode-handler-container.h"
 #include "handler/bitwise-opcode-handler-container.h"
+#include "handler/status-opcode-handler-container.h"
 #include "../utils.h"
 
 namespace emu_6502 {
@@ -14,6 +15,7 @@ namespace emu_6502 {
         handler_containers.push_back(make_unique<TransferOpcodeHandlerContainer>());
         handler_containers.push_back(make_unique<MathsOpcodeHandlerContainer>());
         handler_containers.push_back(make_unique<BitwiseOpcodeHandlerContainer>());
+        handler_containers.push_back(make_unique<StatusOpcodeHandlerContainer>());
 
         init_handlers();
     }
