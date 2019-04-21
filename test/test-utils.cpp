@@ -2,7 +2,7 @@
 
 unique_ptr<Machine> create_machine(vector<uint8_t> code) {
     auto machine = make_unique<Machine>();
-    machine->load(code, 0x600);
+    machine->load(code, CODE_LOAD_ADDR);
 
     return machine;
 }

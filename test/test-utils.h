@@ -10,6 +10,8 @@
 using namespace std;
 using namespace emu_6502;
 
+const uint16_t CODE_LOAD_ADDR = 0x600;
+
 struct RegisterFlagSet {
     bool carry;
     bool zero;

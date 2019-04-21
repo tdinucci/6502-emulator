@@ -12,6 +12,7 @@ namespace emu_6502 {
         ProgramCounter& operator=(const ProgramCounter&) = delete;
 
         void inc();
+        void add(int8_t offset);
     };
 }
 
