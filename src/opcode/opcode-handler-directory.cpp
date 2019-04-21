@@ -8,6 +8,7 @@
 #include "handler/compare-opcode-handler-container.h"
 #include "handler/stack-opcode-handler-container.h"
 #include "handler/branch-opcode-handler-container.h"
+#include "handler/jump-opcode-handler-container.h"
 #include "../utils.h"
 
 namespace emu_6502 {
@@ -22,6 +23,7 @@ namespace emu_6502 {
         handler_containers.push_back(make_unique<CompareOpcodeHandlerContainer>());
         handler_containers.push_back(make_unique<StackOpcodeHandlerContainer>());
         handler_containers.push_back(make_unique<BranchOpcodeHandlerContainer>());
+        handler_containers.push_back(make_unique<JumpOpcodeHandlerContainer>());
 
         init_handlers();
     }

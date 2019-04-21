@@ -15,11 +15,12 @@ namespace emu_6502 {
     uint8_t get_zpg_address(Machine& machine);
     uint8_t get_zpg_x_address(Machine& machine);
     uint8_t get_zpg_y_address(Machine& machine);
+
     uint16_t get_abs_address(Machine& machine);
     uint16_t get_abs_x_address(Machine& machine);
     uint16_t get_abs_y_address(Machine& machine);
-    uint16_t get_abs_x_address(Machine& machine);
-    uint16_t get_abs_y_address(Machine& machine);
+
+    uint16_t get_ind_address(Machine& machine);
     uint16_t get_ind_x_address(Machine& machine);
     uint16_t get_ind_y_address(Machine& machine);
 }
