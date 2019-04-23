@@ -23,11 +23,16 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
         ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
         EXCLUDE_FROM_ALL)
 
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+
 file(GLOB_RECURSE test_src "test/**.h" "test/**.cpp" "src/**.h" "src/**.cpp")
 list(FILTER test_src EXCLUDE REGEX ".*/6502-emulator/src/main.cpp$")
 add_executable(6502_emulator_test ${test_src})
 target_link_libraries(6502_emulator_test gtest_main)
+target_link_libraries(6502_emulator_test ${SDL2_LIBRARIES})
 add_test(NAME run_tests COMMAND 6502_emulator_test)
 
 file(GLOB_RECURSE emulator_src "src/**.h" "src/**.cpp")
 add_executable(6502_emulator ${emulator_src})
+target_link_libraries(6502_emulator ${SDL2_LIBRARIES})

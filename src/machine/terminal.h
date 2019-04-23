@@ -1,8 +1,8 @@
 #ifndef INC_6502_EMULATOR_TERMINAL_H
 #define INC_6502_EMULATOR_TERMINAL_H
 
-#include <ncurses.h>
 #include <memory>
+#include <SDL2/SDL.h>
 #include "memory.h"
 
 using namespace std;
@@ -10,14 +10,19 @@ using namespace std;
 namespace emu_6502 {
     class Terminal {
     private:
-        const uint16_t LOW_ADDR = 0xFB00;
-        const uint16_t HIGH_ADDR = 0xFF00;
-        const uint8_t TERM_LINES = 25;
-        const uint8_t TERM_COLS = 40;
-
-        //WINDOW * mainwin;
+        const uint16_t LOW_ADDR = 0xE000;
+        const uint16_t HIGH_ADDR = 0xF000;
+        const uint8_t WIDTH = 64;
+        const uint8_t HEIGHT = 64;
+        const uint8_t PIXEL_WEIGHT = 8;
 
         Memory& memory;
+
+        SDL_Event event;
+        SDL_Renderer* renderer;
+        SDL_Window* window;
+
+        void draw_pixel(int x, int y, uint8_t colour);
 
     public:
         Terminal(Memory& memory);

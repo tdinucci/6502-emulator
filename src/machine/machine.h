@@ -17,7 +17,7 @@ namespace emu_6502 {
     private:
         unique_ptr<MachineImpl> pimpl;
     public:
-        Machine();
+        Machine(bool init_terminal = true);
         ~Machine();
         Machine(const Machine&) = delete;
         Machine& operator=(const Machine&) = delete;

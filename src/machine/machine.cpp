@@ -1,4 +1,5 @@
 #include "machine.h"
+#include "terminal.h"
 #include "../opcode/opcode-handler-directory.h"
 
 #include <stdexcept>
@@ -6,18 +7,26 @@
 namespace emu_6502 {
     class MachineImpl {
     private:
+        bool terminal_initialised = false;
         uint16_t code_loaded_at;
         uint16_t code_size;
 
         unique_ptr<Cpu> cpu;
         unique_ptr<Memory> memory;
         unique_ptr<Stack> stack;
+        unique_ptr<Terminal> terminal;
         unique_ptr<OpcodeHandlerDirectory> opcode_handler_dir;
     public:
-        MachineImpl() {
+        MachineImpl(bool init_terminal) {
             cpu = make_unique<Cpu>();
             memory = make_unique<Memory>();
             stack = make_unique<Stack>(*memory, cpu->get_sp());
+
+            if (init_terminal) {
+                terminal = make_unique<Terminal>(*memory);
+                terminal_initialised = true;
+            }
+
             opcode_handler_dir = make_unique<OpcodeHandlerDirectory>();
         }
 
@@ -67,11 +76,14 @@ namespace emu_6502 {
             while (!is_eop()) {
                 auto byte = read_program_byte();
                 opcode_handler_dir->execute(byte, machine);
+
+                if (terminal_initialised)
+                    terminal->refresh();
             }
         }
     };
 
-    Machine::Machine() : pimpl(make_unique<MachineImpl>()) {
+    Machine::Machine(bool init_terminal) : pimpl(make_unique<MachineImpl>(init_terminal)) {
     }
 
     Machine::~Machine() = default;

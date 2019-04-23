@@ -1,7 +1,7 @@
 #include "test-utils.h"
 
 unique_ptr<Machine> create_machine(vector<uint8_t> code) {
-    auto machine = make_unique<Machine>();
+    auto machine = make_unique<Machine>(false);
     machine->load(code, CODE_LOAD_ADDR);
 
     return machine;
