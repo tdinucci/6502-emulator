@@ -154,7 +154,6 @@ namespace emu_6502 {
     void MathsOpcodeHandlerContainer::inc(Machine& machine, uint16_t address) {
         uint8_t value = machine.get_memory().get_at(address) + 1;
         machine.get_memory().set_at(address, value);
-
         set_zero_and_neg_flags(machine.get_cpu().get_ps(), value);
     }
 

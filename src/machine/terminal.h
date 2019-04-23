@@ -2,6 +2,7 @@
 #define INC_6502_EMULATOR_TERMINAL_H
 
 #include <memory>
+#include <vector>
 #include <SDL2/SDL.h>
 #include "memory.h"
 
@@ -10,11 +11,11 @@ using namespace std;
 namespace emu_6502 {
     class Terminal {
     private:
-        const uint16_t LOW_ADDR = 0xE000;
-        const uint16_t HIGH_ADDR = 0xF000;
-        const uint8_t WIDTH = 64;
-        const uint8_t HEIGHT = 64;
-        const uint8_t PIXEL_WEIGHT = 8;
+        static const uint16_t LOW_ADDR = 0xE000;
+        static const uint16_t HIGH_ADDR = 0xF000;
+        static const uint8_t WIDTH = 64;
+        static const uint8_t HEIGHT = 64;
+        static const uint8_t PIXEL_WEIGHT = 8;
 
         Memory& memory;
 

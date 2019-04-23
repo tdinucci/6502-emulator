@@ -29,14 +29,11 @@ namespace emu_6502 {
             x = (i - LOW_ADDR) % WIDTH;
             y = (i - LOW_ADDR) / HEIGHT;
 
-            auto colour = memory.get_at(i);
-            if (colour) {
-                draw_pixel(x, y, colour);
-            }
+            draw_pixel(x, y, memory.get_at(i));
         }
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(5);
+        //SDL_Delay(20);
     }
 
     void Terminal::draw_pixel(int x, int y, uint8_t colour) {
@@ -45,15 +42,14 @@ namespace emu_6502 {
         green = (colour >> 2) & 0x07;
         blue = colour & 0x03;
 
-        cout << "RED: " << (int)red << " GREEN: " << (int)green << " BLUE: " << (int)blue << endl;
+        //cout << "x: " << (int)x << " y: " << (int)y << " RED: " << (int)red << " GREEN: " << (int)green << " BLUE: " << (int)blue << endl;
 
-        SDL_SetRenderDrawColor(renderer, red * 36, green * 36, blue * 85, 0);
-        for (int i = 0; i < PIXEL_WEIGHT; i++) {
-            SDL_RenderDrawPoint(renderer, (x * PIXEL_WEIGHT) + i, (y * PIXEL_WEIGHT));
-
-            for (int j = 0; j < PIXEL_WEIGHT; j++) {
-                SDL_RenderDrawPoint(renderer, (x * PIXEL_WEIGHT) + i, (y * PIXEL_WEIGHT) + j);
-            }
-        }
+        SDL_SetRenderDrawColor(renderer, red * 36, green * 36, blue * 85, 255);
+        SDL_Rect rect{};
+        rect.x = x * PIXEL_WEIGHT;
+        rect.y = y * PIXEL_WEIGHT;
+        rect.w = PIXEL_WEIGHT;
+        rect.h = PIXEL_WEIGHT;
+        SDL_RenderFillRect(renderer, &rect);
     }
 }

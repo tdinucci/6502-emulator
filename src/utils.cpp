@@ -65,7 +65,6 @@ namespace emu_6502 {
         auto low = machine.get_memory().get_at(paddress);
         auto high = machine.get_memory().get_at(paddress + 1);
         uint16_t address = (high << 8) + low;
-
         return address;
     }
 

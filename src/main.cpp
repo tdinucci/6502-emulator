@@ -21,7 +21,7 @@ int main() {
             (istreambuf_iterator<char>()));
 
     auto machine = make_unique<Machine>();
-    machine->load(code, 0x600);
+    machine->load(code, 0x1000);
     machine->execute();
 
     return 0;
