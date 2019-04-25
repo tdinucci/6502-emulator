@@ -19,7 +19,6 @@ namespace emu_6502 {
 
         Memory& memory;
 
-        SDL_Event event;
         SDL_Renderer* renderer;
         SDL_Window* window;
 
@@ -31,8 +30,6 @@ namespace emu_6502 {
         Terminal(const Terminal&) = delete;
         Terminal& operator=(const Terminal&) = delete;
         ~Terminal();
-
-        //void refresh();
     };
 }
 

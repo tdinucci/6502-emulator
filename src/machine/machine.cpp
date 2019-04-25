@@ -1,5 +1,6 @@
 #include "machine.h"
 #include "terminal.h"
+#include "keyboard.h"
 #include "../opcode/opcode-handler-directory.h"
 
 #include <stdexcept>
@@ -7,25 +8,26 @@
 namespace emu_6502 {
     class MachineImpl {
     private:
-        bool terminal_initialised = false;
         uint16_t code_loaded_at;
         uint16_t code_size;
+
+        uint32_t instruction_iteration;
 
         unique_ptr<Cpu> cpu;
         unique_ptr<Memory> memory;
         unique_ptr<Stack> stack;
         unique_ptr<Terminal> terminal;
+        unique_ptr<Keyboard> keyboard;
         unique_ptr<OpcodeHandlerDirectory> opcode_handler_dir;
     public:
         MachineImpl(bool init_terminal) {
             cpu = make_unique<Cpu>();
             memory = make_unique<Memory>();
             stack = make_unique<Stack>(*memory, cpu->get_sp());
+            keyboard = make_unique<Keyboard>(*memory);
 
-            if (init_terminal) {
+            if (init_terminal)
                 terminal = make_unique<Terminal>(*memory);
-                terminal_initialised = true;
-            }
 
             opcode_handler_dir = make_unique<OpcodeHandlerDirectory>();
         }
@@ -77,8 +79,10 @@ namespace emu_6502 {
                 auto byte = read_program_byte();
                 opcode_handler_dir->execute(byte, machine);
 
-//                if (terminal_initialised)
-//                    terminal->refresh();
+                if (instruction_iteration++ >= 100) {
+                    keyboard->read();
+                    instruction_iteration = 0;
+                }
             }
         }
     };

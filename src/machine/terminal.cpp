@@ -25,19 +25,6 @@ namespace emu_6502 {
         SDL_Quit();
     }
 
-//    void Terminal::refresh() {
-//        int x, y = 0;
-//        for (auto i = LOW_ADDR; i <= HIGH_ADDR; i++) {
-//            x = (i - LOW_ADDR) % WIDTH;
-//            y = (i - LOW_ADDR) / HEIGHT;
-//
-//            draw_pixel(x, y, memory.get_at(i));
-//        }
-//
-//        SDL_RenderPresent(renderer);
-//        SDL_Delay(150);
-//    }
-
     void Terminal::on_memory_written(pair<uint16_t, uint8_t> address_value) {
         uint16_t address = address_value.first;
 
@@ -49,7 +36,7 @@ namespace emu_6502 {
             draw_pixel(x, y, colour);
 
             SDL_RenderPresent(renderer);
-            SDL_Delay(5);
+            SDL_Delay(50);
         }
     }
 
