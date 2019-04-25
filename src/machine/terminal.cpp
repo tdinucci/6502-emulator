@@ -15,6 +15,8 @@ namespace emu_6502 {
         for (auto i = LOW_ADDR; i <= HIGH_ADDR; i++) {
             memory.set_at(i, 0);
         }
+
+        memory.register_callback([this](pair<uint16_t, uint8_t> addr_val) { on_memory_written(addr_val); });
     }
 
     Terminal::~Terminal() {
@@ -23,17 +25,32 @@ namespace emu_6502 {
         SDL_Quit();
     }
 
-    void Terminal::refresh() {
-        int x, y = 0;
-        for (auto i = LOW_ADDR; i <= HIGH_ADDR; i++) {
-            x = (i - LOW_ADDR) % WIDTH;
-            y = (i - LOW_ADDR) / HEIGHT;
+//    void Terminal::refresh() {
+//        int x, y = 0;
+//        for (auto i = LOW_ADDR; i <= HIGH_ADDR; i++) {
+//            x = (i - LOW_ADDR) % WIDTH;
+//            y = (i - LOW_ADDR) / HEIGHT;
+//
+//            draw_pixel(x, y, memory.get_at(i));
+//        }
+//
+//        SDL_RenderPresent(renderer);
+//        SDL_Delay(150);
+//    }
 
-            draw_pixel(x, y, memory.get_at(i));
+    void Terminal::on_memory_written(pair<uint16_t, uint8_t> address_value) {
+        uint16_t address = address_value.first;
+
+        if (address >= LOW_ADDR && address <= HIGH_ADDR) {
+            uint8_t colour = address_value.second;
+            int x = (address - LOW_ADDR) % WIDTH;
+            int y = (address - LOW_ADDR) / HEIGHT;
+
+            draw_pixel(x, y, colour);
+
+            SDL_RenderPresent(renderer);
+            SDL_Delay(5);
         }
-
-        SDL_RenderPresent(renderer);
-        //SDL_Delay(20);
     }
 
     void Terminal::draw_pixel(int x, int y, uint8_t colour) {

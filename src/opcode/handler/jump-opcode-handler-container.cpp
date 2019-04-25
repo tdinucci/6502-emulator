@@ -38,7 +38,7 @@ namespace emu_6502 {
         auto low_byte = machine.get_stack().pop();
         auto high_byte = machine.get_stack().pop();
 
-        uint16_t return_address = (high_byte << 8) + low_byte + 1;
+        uint16_t return_address = (high_byte << 8) + low_byte;// + 1;
         machine.get_cpu().get_pc().set_value(return_address);
     }
 }

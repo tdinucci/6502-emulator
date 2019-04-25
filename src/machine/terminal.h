@@ -23,6 +23,7 @@ namespace emu_6502 {
         SDL_Renderer* renderer;
         SDL_Window* window;
 
+        void on_memory_written(pair<uint16_t, uint8_t> address_value);
         void draw_pixel(int x, int y, uint8_t colour);
 
     public:
@@ -31,7 +32,7 @@ namespace emu_6502 {
         Terminal& operator=(const Terminal&) = delete;
         ~Terminal();
 
-        void refresh();
+        //void refresh();
     };
 }
 

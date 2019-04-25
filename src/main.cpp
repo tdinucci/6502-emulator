@@ -12,7 +12,9 @@ using namespace std;
 using namespace emu_6502;
 
 int main() {
-    ifstream in("/home/tony/CLionProjects/6502-emulator/sample/a.o65", ios::binary);
+    string binary = "/home/tony/CLionProjects/6502-emulator/sample/a.o65";
+    //string binary = "/home/tony/Downloads/6502_functional_test.bin";
+    ifstream in(binary, ios::binary);
     if (in.fail())
         throw runtime_error("Failed to read program file");
 
@@ -21,7 +23,7 @@ int main() {
             (istreambuf_iterator<char>()));
 
     auto machine = make_unique<Machine>();
-    machine->load(code, 0x1000);
+    machine->load(code, 0x600);
     machine->execute();
 
     return 0;

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cstdint>
+#include <functional>
 
 using namespace std;
 
@@ -10,6 +11,7 @@ namespace emu_6502 {
     class Memory {
     private:
         vector<uint8_t> memory;
+        vector<function<void(pair<uint16_t, uint8_t>)>> on_write_callbacks;
 
         uint16_t get_page_offset(uint8_t page);
 
@@ -23,6 +25,8 @@ namespace emu_6502 {
 
         uint8_t get_from_page(uint8_t page, uint8_t offset);
         void set_on_page(uint8_t page, uint8_t offset, uint8_t value);
+
+        void register_callback(function<void(pair<uint16_t, uint8_t>)> callback);
     };
 }
 

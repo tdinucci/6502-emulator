@@ -77,8 +77,8 @@ namespace emu_6502 {
                 auto byte = read_program_byte();
                 opcode_handler_dir->execute(byte, machine);
 
-                if (terminal_initialised)
-                    terminal->refresh();
+//                if (terminal_initialised)
+//                    terminal->refresh();
             }
         }
     };
