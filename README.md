@@ -41,6 +41,8 @@ There is 64KB of memory and this is broken into
 
 Resolution of the "attached display" is 64 * 64, so 4096 bytes.  Each "pixel" is blown up to be 8 pixels in size so things are nice and blocky.  
 
+Writing a byte to 0xE000 will draw a pixel at the top left and at byte at 0xF000 will display at the bottom right.
+
 Each pixel can be one of 256 colours where bits:
 
 * 0-1 are blue  
@@ -50,6 +52,8 @@ Each pixel can be one of 256 colours where bits:
 ### Keyboard
 
 The last key pressed is stored to 0xF001 and it's up to your programs to clear this out after reading if you don't want to repeatedly read the same keypress.
+
+SDL is used for reading key presses and the code for each key is https://wiki.libsdl.org/SDLScancodeLookup.  Only key presses where the code is <= 0xFF are logged.
 
 ## Sample
 
