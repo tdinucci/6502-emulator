@@ -62,5 +62,5 @@ TEST(LoadOpcodeHandlerContainer, RTS) {
     }
 
     ASSERT_EQ(0x99, machine->get_cpu().get_a().get_value());
-    ASSERT_EQ(0x605, machine->get_cpu().get_pc().get_value());
+    ASSERT_EQ(0x604, machine->get_cpu().get_pc().get_value());
 }

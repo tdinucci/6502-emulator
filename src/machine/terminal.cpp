@@ -36,7 +36,7 @@ namespace emu_6502 {
             draw_pixel(x, y, colour);
 
             SDL_RenderPresent(renderer);
-            SDL_Delay(50);
+            SDL_Delay(20);
         }
     }
 
@@ -45,8 +45,6 @@ namespace emu_6502 {
         red = colour >> 5;
         green = (colour >> 2) & 0x07;
         blue = colour & 0x03;
-
-        //cout << "x: " << (int)x << " y: " << (int)y << " RED: " << (int)red << " GREEN: " << (int)green << " BLUE: " << (int)blue << endl;
 
         SDL_SetRenderDrawColor(renderer, red * 36, green * 36, blue * 85, 255);
         SDL_Rect rect{};
