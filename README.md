@@ -37,7 +37,13 @@ There is 64KB of memory and this is broken into
 
 0xF002 - 0xFFFF - Free
 
-### Video 
+## Timing
+
+At the moment there is no emulation of clock cycles and so programs will just execute as fast as they can and it's not possible to introduce delays by looping and counting cycles.  This is something I'm considering adding but isn't currently at the top of my list...feel free to submit a PR.
+
+Because there is no real timing it was necessary to do something with the display, otherwise it would be updated far too quickly.  The hack here is that every time a byte is written to video memory a delay of 20ms is introduced.  This is fine for playing around with video stuff (like in the sample) but if you want to update the entire screen quickly it's rubbish - see comments in _sample/draw.s_ about the "clear_screen" routine.
+
+## Video 
 
 Resolution of the "attached display" is 64 * 64, so 4096 bytes.  Each "pixel" is blown up to be 8 pixels in size so things are nice and blocky.  
 
@@ -49,7 +55,7 @@ Each pixel can be one of 256 colours where bits:
 * 2-4 are green
 * 5-7 are red
 
-### Keyboard
+## Keyboard
 
 The last key pressed is stored to 0xF001 and it's up to your programs to clear this out after reading if you don't want to repeatedly read the same keypress.
 
