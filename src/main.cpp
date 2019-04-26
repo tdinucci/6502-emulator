@@ -12,7 +12,7 @@ using namespace std;
 using namespace emu_6502;
 
 int main() {
-    string binary = "/home/tony/CLionProjects/6502-emulator/sample/a.o65";
+    string binary = "sample/a.o65";
     //string binary = "/home/tony/Downloads/6502_functional_test.bin";
     ifstream in(binary, ios::binary);
     if (in.fail())
