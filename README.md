@@ -27,7 +27,11 @@ If you want to run a binary of a different name just update the path in _src/mai
 
 There is 64KB of memory and this is broken into 
 
-0x0000 - 0x05FF - Free
+0x0000 - 0x00FF - Free (Zero Page)
+
+0x0100 - 0x01FF - Stack
+
+0x0200 - 0x05FF - Free
 
 0x0600 - 0xDFFF - Program - always make sure to assemble programs for this address
 
