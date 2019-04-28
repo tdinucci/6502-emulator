@@ -2,7 +2,11 @@
 
 namespace emu_6502 {
     inline uint16_t Memory::get_page_offset(uint8_t page) {
-        return page * 0xFF;
+        uint16_t address = page * 0xFF;
+        if (page > 0)
+            address += 1;
+
+        return address;
     }
 
     Memory::Memory() {
