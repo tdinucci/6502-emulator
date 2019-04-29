@@ -9,7 +9,7 @@ If you're looking for something to run games on this isn't for you.  If however 
 
 This has only been tested on Linux (Ubuntu 18.04).  There are no Linux specific dependencies though so in theory it should be buildable on Windows too.
 
-* Make sure you've CMake 3.13 or higher installed
+* Make sure you've CMake 3.10 or higher installed
 * Clone this repo
 * CD to the root of the repo
 
